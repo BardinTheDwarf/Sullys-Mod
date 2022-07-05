@@ -1,4 +1,4 @@
-package com.uraneptus.sullysmod.client.renderer.entities.model;
+package com.uraneptus.sullysmod.client.models;
 
 import com.uraneptus.sullysmod.SullysMod;
 import com.uraneptus.sullysmod.common.entities.CopperGolem;

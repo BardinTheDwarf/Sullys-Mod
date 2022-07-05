@@ -1,4 +1,4 @@
-package com.uraneptus.sullysmod.client.renderer.entities.model;
+package com.uraneptus.sullysmod.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

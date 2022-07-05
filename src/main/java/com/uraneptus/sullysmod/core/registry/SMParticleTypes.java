@@ -1,7 +1,7 @@
 package com.uraneptus.sullysmod.core.registry;
 
 import com.uraneptus.sullysmod.SullysMod;
-import com.uraneptus.sullysmod.client.renderer.particles.RicochetParticle;
+import com.uraneptus.sullysmod.client.particles.RicochetParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleType;

@@ -55,14 +55,19 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.List;
 import java.util.Random;
 
-public class Tortoise extends Animal implements IAnimatable {
+public class Tortoise extends Animal /*implements IAnimatable*/ {
     public static final EntityDataAccessor<Integer> HIDE_TIMER = SynchedEntityData.defineId(Tortoise.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Tortoise.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> LAYING_EGG = SynchedEntityData.defineId(Tortoise.class, EntityDataSerializers.BOOLEAN);
 
     int layEggCounter;
 
-    private final AnimationFactory factory = new AnimationFactory(this);
+    public AnimationState walkingState = new AnimationState();
+    public AnimationState hideState = new AnimationState();
+    public AnimationState hidingState = new AnimationState();
+    public AnimationState revealState = new AnimationState();
+
+    //private final AnimationFactory factory = new AnimationFactory(this);
     public static final Ingredient FOOD_ITEMS = Ingredient.of(SMItemTags.TORTOISE_FOOD);
 
     public Tortoise(EntityType<? extends Animal> entityType, Level level) {
@@ -157,6 +162,32 @@ public class Tortoise extends Animal implements IAnimatable {
                 else this.setHideTimerDuration(200);
             }
         }
+
+        //Animations
+        //TODO Fix hide/hiding animation
+        //TODO Fix walking animation
+        if (level.isClientSide()) {
+            if (!((double) animationSpeed < 0.08D) && getHideTimerDuration() == 0 && isOnGround()) {
+                this.walkingState.startIfStopped(tickCount);
+            } else {
+                this.walkingState.stop();
+            }
+            if (getHideTimerDuration() > 1) {
+                this.hideState.start(10);
+                if (!this.hideState.isStarted()) {
+                    this.hidingState.startIfStopped(tickCount);
+                } else {
+                    this.hidingState.stop();
+                }
+            } else {
+                hideState.stop();
+            }
+            if (getHideTimerDuration() == 1) {
+                this.revealState.startIfStopped(tickCount);
+            } else {
+                this.revealState.stop();
+            }
+        }
     }
 
     public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
@@ -202,7 +233,7 @@ public class Tortoise extends Animal implements IAnimatable {
         return null;
     }
 
-    public <E extends IAnimatable> PlayState setAnimation(AnimationEvent<E> event) {
+    /*public <E extends IAnimatable> PlayState setAnimation(AnimationEvent<E> event) {
         boolean onGround = isOnGround();
 
         if (!((double) animationSpeed < 0.08D) && getHideTimerDuration() == 0 && onGround) {
@@ -217,7 +248,7 @@ public class Tortoise extends Animal implements IAnimatable {
         }
 
         return PlayState.STOP;
-    }
+    }*/
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
@@ -261,6 +292,7 @@ public class Tortoise extends Animal implements IAnimatable {
         return this.isBaby() ? SMSounds.BABY_TORTOISE_DEATH.get() : SMSounds.TORTOISE_DEATH.get();
     }
 
+    /*
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void registerControllers(AnimationData data) {
@@ -271,7 +303,7 @@ public class Tortoise extends Animal implements IAnimatable {
     @Override
     public AnimationFactory getFactory() {
         return this.factory;
-    }
+    }*/
 
     public int getHideTimerDuration() {
         return this.entityData.get(HIDE_TIMER);
