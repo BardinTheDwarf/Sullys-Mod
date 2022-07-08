@@ -164,10 +164,15 @@ public class Tortoise extends Animal /*implements IAnimatable*/ {
         }
 
         //Animations
-        //TODO Fix hide/hiding animation
-        //TODO Fix walking animation
+        //Broken hide/hiding animation
+        //Broken walking animation
+
+        /*
+         * Mc currently does not provide a transition between animations,
+         * it will always go back to the initial model first.
+         */
         if (level.isClientSide()) {
-            if (!((double) animationSpeed < 0.08D) && getHideTimerDuration() == 0 && isOnGround()) {
+            if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D && getHideTimerDuration() == 0 && isOnGround()) {
                 this.walkingState.startIfStopped(tickCount);
             } else {
                 this.walkingState.stop();
